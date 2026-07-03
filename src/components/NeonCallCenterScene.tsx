@@ -292,70 +292,89 @@ export default function NeonCallCenterScene() {
 
         {/* Top HUD bar */}
         <header
-          className="flex items-center justify-between border-b backdrop-blur-sm"
+          className="border-b backdrop-blur-sm"
           style={{
             borderColor: BLUE + "22",
             background: "rgba(0,5,16,0.75)",
-            padding: isLandscape ? "2px 12px" : "10px 20px",
+            padding: isLandscape ? "2px 12px" : "8px 16px",
           }}
         >
-          <div className="flex items-center" style={{ gap: isLandscape ? 8 : 12 }}>
-            <motion.div
-              className="rounded border-2 flex items-center justify-center font-black font-mono"
-              style={{
-                borderColor: RED, color: RED, background: RED + "22",
-                width: isLandscape ? 16 : 28, height: isLandscape ? 16 : 28,
-                fontSize: isLandscape ? 7 : 12,
-              }}
-              animate={{ boxShadow: [`0 0 6px ${RED}66`, `0 0 14px ${RED}cc`, `0 0 6px ${RED}66`] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >Rx</motion.div>
-            <div>
-              <div className="font-mono font-bold tracking-widest" style={{ color: BLUE, fontSize: isLandscape ? 8 : 12 }}>
-                ONLINE PHARMACY — VOICE AGENT CONTROL
+          {isLandscape ? (
+            /* ── Landscape: single compact row ── */
+            <div className="flex items-center justify-between">
+              <div className="flex items-center" style={{ gap: 8 }}>
+                <motion.div
+                  className="rounded border-2 flex items-center justify-center font-black font-mono"
+                  style={{ borderColor: RED, color: RED, background: RED + "22", width: 16, height: 16, fontSize: 7 }}
+                  animate={{ boxShadow: [`0 0 6px ${RED}66`, `0 0 14px ${RED}cc`, `0 0 6px ${RED}66`] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >Rx</motion.div>
+                <span className="font-mono font-bold" style={{ color: BLUE, fontSize: 8 }}>
+                  ONLINE PHARMACY — VOICE AGENT CONTROL
+                </span>
               </div>
-              {!isLandscape && (
-                <div className="text-[8px] font-mono uppercase tracking-widest text-white/25">
-                  CINEMATIC HQ · AI POWERED · LIVE
+              <div className="flex items-center" style={{ gap: 8 }}>
+                <motion.div
+                  className="font-mono rounded border"
+                  style={{ color: GREEN, borderColor: GREEN + "55", background: GREEN + "11", fontSize: 8, padding: "0 6px" }}
+                  animate={{ opacity: [1, 0.5, 1], boxShadow: [`0 0 6px ${GREEN}44`, `0 0 12px ${GREEN}88`, `0 0 6px ${GREEN}44`] }}
+                  transition={{ duration: 1.4, repeat: Infinity }}
+                >● LIVE</motion.div>
+                <span className="font-mono font-bold" style={{ color: BLUE, fontSize: 8 }}>{time}</span>
+              </div>
+            </div>
+          ) : (
+            /* ── Portrait: two rows — title top, stats bottom ── */
+            <>
+              {/* Row 1: Rx icon + full title */}
+              <div className="flex items-center gap-3 mb-2">
+                <motion.div
+                  className="rounded border-2 flex items-center justify-center text-xs font-black font-mono shrink-0"
+                  style={{ borderColor: RED, color: RED, background: RED + "22", width: 28, height: 28 }}
+                  animate={{ boxShadow: [`0 0 6px ${RED}66`, `0 0 14px ${RED}cc`, `0 0 6px ${RED}66`] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >Rx</motion.div>
+                <div>
+                  <div className="font-mono font-bold text-xs tracking-widest" style={{ color: BLUE }}>
+                    ONLINE PHARMACY — VOICE AGENT CONTROL
+                  </div>
+                  <div className="text-[8px] font-mono uppercase tracking-widest text-white/25">
+                    CINEMATIC HQ · AI POWERED · LIVE
+                  </div>
                 </div>
-              )}
-            </div>
-          </div>
-
-          <div className="flex items-center" style={{ gap: isLandscape ? 8 : 20 }}>
-            {/* Stats — shown in portrait only */}
-            {!isLandscape && [
-              { v: callCount.toLocaleString(), l: "ЗВОНКОВ",   c: GREEN },
-              { v: "6 / 8",                    l: "ОПЕРАТОРОВ", c: BLUE  },
-              { v: "98.7%",                    l: "SLA",        c: GOLD  },
-            ].map((s) => (
-              <div key={s.l} className="text-right">
-                <div className="font-mono font-bold text-sm" style={{ color: s.c, textShadow: `0 0 8px ${s.c}88` }}>{s.v}</div>
-                <div className="text-[8px] text-white/30 font-mono uppercase">{s.l}</div>
               </div>
-            ))}
-
-            <motion.div
-              className="font-mono rounded border"
-              style={{
-                color: GREEN, borderColor: GREEN + "55", background: GREEN + "11",
-                fontSize: isLandscape ? 8 : 12,
-                padding: isLandscape ? "0 6px" : "4px 10px",
-              }}
-              animate={{ opacity: [1, 0.5, 1], boxShadow: [`0 0 6px ${GREEN}44`, `0 0 12px ${GREEN}88`, `0 0 6px ${GREEN}44`] }}
-              transition={{ duration: 1.4, repeat: Infinity }}
-            >● LIVE</motion.div>
-
-            <div className="font-mono font-bold" style={{ color: BLUE, textShadow: `0 0 8px ${BLUE}66`, fontSize: isLandscape ? 8 : 14 }}>
-              {time}
-            </div>
-          </div>
+              {/* Row 2: stats + LIVE + time */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  {[
+                    { v: callCount.toLocaleString(), l: "ЗВОНКОВ",   c: GREEN },
+                    { v: "6 / 8",                    l: "ОПЕРАТОРОВ", c: BLUE  },
+                    { v: "98.7%",                    l: "SLA",        c: GOLD  },
+                  ].map((s) => (
+                    <div key={s.l}>
+                      <div className="font-mono font-bold text-sm" style={{ color: s.c, textShadow: `0 0 8px ${s.c}88` }}>{s.v}</div>
+                      <div className="text-[8px] text-white/30 font-mono uppercase">{s.l}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center gap-3">
+                  <motion.div
+                    className="text-xs font-mono px-2.5 py-1 rounded border"
+                    style={{ color: GREEN, borderColor: GREEN + "55", background: GREEN + "11" }}
+                    animate={{ opacity: [1, 0.5, 1], boxShadow: [`0 0 6px ${GREEN}44`, `0 0 12px ${GREEN}88`, `0 0 6px ${GREEN}44`] }}
+                    transition={{ duration: 1.4, repeat: Infinity }}
+                  >● LIVE</motion.div>
+                  <div className="font-mono font-bold text-sm" style={{ color: BLUE, textShadow: `0 0 8px ${BLUE}66` }}>{time}</div>
+                </div>
+              </div>
+            </>
+          )}
         </header>
 
         {/* Side panels — portrait only */}
         {!isLandscape && (
           <>
-            <div className="absolute left-4 top-16 w-44 space-y-2 z-30">
+            <div className="absolute left-4 top-24 w-44 space-y-2 z-30">
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
                 <ScreenPanel title="МЕТРИКИ" color={GREEN}>
                   <div className="space-y-1.5">
@@ -390,7 +409,7 @@ export default function NeonCallCenterScene() {
               </motion.div>
             </div>
 
-            <div className="absolute right-4 top-16 w-44 space-y-2 z-30">
+            <div className="absolute right-4 top-24 w-44 space-y-2 z-30">
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
                 <ScreenPanel title="ДАННЫЕ ЭКРАНА" color={BLUE}>
                   <DataStream color={BLUE} speed={1.5} />
