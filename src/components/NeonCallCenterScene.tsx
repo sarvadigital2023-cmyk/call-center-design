@@ -278,53 +278,54 @@ export default function NeonCallCenterScene() {
 
         {/* Top HUD bar */}
         <header
-          className="flex items-center justify-between px-5 py-2.5 border-b backdrop-blur-sm"
+          className="flex items-center justify-between px-5 landscape:px-3 py-2.5 landscape:py-[3px] border-b backdrop-blur-sm"
           style={{ borderColor: BLUE + "22", background: "rgba(0,5,16,0.75)" }}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 landscape:gap-2">
             <motion.div
-              className="w-7 h-7 rounded border-2 flex items-center justify-center text-xs font-black font-mono"
+              className="w-7 h-7 landscape:w-4 landscape:h-4 rounded border-2 landscape:border flex items-center justify-center text-xs landscape:text-[8px] font-black font-mono"
               style={{ borderColor: RED, color: RED, background: RED + "22" }}
               animate={{ boxShadow: [`0 0 6px ${RED}66`, `0 0 14px ${RED}cc`, `0 0 6px ${RED}66`] }}
               transition={{ duration: 2, repeat: Infinity }}
             >Rx</motion.div>
             <div>
-              <div className="font-mono font-bold text-xs tracking-widest" style={{ color: BLUE }}>
+              <div className="font-mono font-bold text-xs landscape:text-[8px] tracking-widest" style={{ color: BLUE }}>
                 ONLINE PHARMACY — VOICE AGENT CONTROL
               </div>
-              <div className="text-[8px] font-mono uppercase tracking-widest text-white/25">
+              <div className="text-[8px] font-mono uppercase tracking-widest text-white/25 landscape:hidden">
                 CINEMATIC HQ · AI POWERED · LIVE
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-5 landscape:gap-2">
+            {/* Stats — hidden in landscape to free up header height */}
             {[
               { v: callCount.toLocaleString(), l: "ЗВОНКОВ",   c: GREEN },
               { v: "6 / 8",                    l: "ОПЕРАТОРОВ", c: BLUE  },
               { v: "98.7%",                    l: "SLA",        c: GOLD  },
             ].map((s) => (
-              <div key={s.l} className="text-right">
+              <div key={s.l} className="text-right landscape:hidden">
                 <div className="font-mono font-bold text-sm" style={{ color: s.c, textShadow: `0 0 8px ${s.c}88` }}>{s.v}</div>
                 <div className="text-[8px] text-white/30 font-mono uppercase">{s.l}</div>
               </div>
             ))}
 
             <motion.div
-              className="text-xs font-mono px-2.5 py-1 rounded border"
+              className="text-xs landscape:text-[8px] font-mono px-2.5 landscape:px-1.5 py-1 landscape:py-0 rounded border"
               style={{ color: GREEN, borderColor: GREEN + "55", background: GREEN + "11" }}
               animate={{ opacity: [1, 0.5, 1], boxShadow: [`0 0 6px ${GREEN}44`, `0 0 12px ${GREEN}88`, `0 0 6px ${GREEN}44`] }}
               transition={{ duration: 1.4, repeat: Infinity }}
             >● LIVE</motion.div>
 
-            <div className="font-mono font-bold text-sm" style={{ color: BLUE, textShadow: `0 0 8px ${BLUE}66` }}>
+            <div className="font-mono font-bold text-sm landscape:text-[8px]" style={{ color: BLUE, textShadow: `0 0 8px ${BLUE}66` }}>
               {time}
             </div>
           </div>
         </header>
 
-        {/* Left side panel */}
-        <div className="absolute left-4 landscape:left-2 top-16 landscape:top-12 w-44 landscape:w-36 space-y-2 z-30">
+        {/* Left side panel — hidden in landscape to reveal background faces */}
+        <div className="absolute left-4 top-16 w-44 space-y-2 z-30 landscape:hidden">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
             <ScreenPanel title="МЕТРИКИ" color={GREEN}>
               <div className="space-y-1.5">
@@ -360,8 +361,8 @@ export default function NeonCallCenterScene() {
           </motion.div>
         </div>
 
-        {/* Right side panel */}
-        <div className="absolute right-4 landscape:right-2 top-16 landscape:top-12 w-44 landscape:w-36 space-y-2 z-30">
+        {/* Right side panel — hidden in landscape to reveal background faces */}
+        <div className="absolute right-4 top-16 w-44 space-y-2 z-30 landscape:hidden">
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
             <ScreenPanel title="ДАННЫЕ ЭКРАНА" color={BLUE}>
               <DataStream color={BLUE} speed={1.5} />
