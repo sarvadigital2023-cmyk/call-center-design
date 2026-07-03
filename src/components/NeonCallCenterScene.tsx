@@ -19,6 +19,19 @@ const OPERATORS = [
   { name: "Анна Ф.",   dept: "OTC", calls: 44, active: true,  color: PURPLE },
 ];
 
+// ─── Landscape detection hook (JS-based, reliable) ────────────────────────────
+function useIsLandscape() {
+  const [ls, setLs] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(orientation: landscape)");
+    setLs(mq.matches);
+    const h = (e: MediaQueryListEvent) => setLs(e.matches);
+    mq.addEventListener("change", h);
+    return () => mq.removeEventListener("change", h);
+  }, []);
+  return ls;
+}
+
 // ─── Animated count-up hook ────────────────────────────────────────────────────
 function useCount(target: number, duration = 2200) {
   const [val, setVal] = useState(0);
@@ -200,8 +213,9 @@ function CallQueue() {
 // ─── Main export ───────────────────────────────────────────────────────────────
 export default function NeonCallCenterScene() {
   const [time, setTime] = useState("");
-  const parallax   = useParallax();
-  const callCount  = useCount(1247);
+  const parallax    = useParallax();
+  const callCount   = useCount(1247);
+  const isLandscape = useIsLandscape();
 
   useEffect(() => {
     const tick = () => setTime(new Date().toLocaleTimeString("ru-RU"));
@@ -232,8 +246,8 @@ export default function NeonCallCenterScene() {
         <img
           src="/callcenter-scene-c6.png"
           alt="Pharmacy Call Center"
-          className="w-full h-full object-cover object-[50%_20%] landscape:object-[50%_10%]"
-          style={{ opacity: 0.92 }}
+          className="w-full h-full object-cover"
+          style={{ opacity: 0.92, objectPosition: isLandscape ? "50% 8%" : "50% 20%" }}
         />
       </motion.div>
 
@@ -278,154 +292,174 @@ export default function NeonCallCenterScene() {
 
         {/* Top HUD bar */}
         <header
-          className="flex items-center justify-between px-5 landscape:px-3 py-2.5 landscape:py-[3px] border-b backdrop-blur-sm"
-          style={{ borderColor: BLUE + "22", background: "rgba(0,5,16,0.75)" }}
+          className="flex items-center justify-between border-b backdrop-blur-sm"
+          style={{
+            borderColor: BLUE + "22",
+            background: "rgba(0,5,16,0.75)",
+            padding: isLandscape ? "2px 12px" : "10px 20px",
+          }}
         >
-          <div className="flex items-center gap-3 landscape:gap-2">
+          <div className="flex items-center" style={{ gap: isLandscape ? 8 : 12 }}>
             <motion.div
-              className="w-7 h-7 landscape:w-4 landscape:h-4 rounded border-2 landscape:border flex items-center justify-center text-xs landscape:text-[8px] font-black font-mono"
-              style={{ borderColor: RED, color: RED, background: RED + "22" }}
+              className="rounded border-2 flex items-center justify-center font-black font-mono"
+              style={{
+                borderColor: RED, color: RED, background: RED + "22",
+                width: isLandscape ? 16 : 28, height: isLandscape ? 16 : 28,
+                fontSize: isLandscape ? 7 : 12,
+              }}
               animate={{ boxShadow: [`0 0 6px ${RED}66`, `0 0 14px ${RED}cc`, `0 0 6px ${RED}66`] }}
               transition={{ duration: 2, repeat: Infinity }}
             >Rx</motion.div>
             <div>
-              <div className="font-mono font-bold text-xs landscape:text-[8px] tracking-widest" style={{ color: BLUE }}>
+              <div className="font-mono font-bold tracking-widest" style={{ color: BLUE, fontSize: isLandscape ? 8 : 12 }}>
                 ONLINE PHARMACY — VOICE AGENT CONTROL
               </div>
-              <div className="text-[8px] font-mono uppercase tracking-widest text-white/25 landscape:hidden">
-                CINEMATIC HQ · AI POWERED · LIVE
-              </div>
+              {!isLandscape && (
+                <div className="text-[8px] font-mono uppercase tracking-widest text-white/25">
+                  CINEMATIC HQ · AI POWERED · LIVE
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="flex items-center gap-5 landscape:gap-2">
-            {/* Stats — hidden in landscape to free up header height */}
-            {[
+          <div className="flex items-center" style={{ gap: isLandscape ? 8 : 20 }}>
+            {/* Stats — shown in portrait only */}
+            {!isLandscape && [
               { v: callCount.toLocaleString(), l: "ЗВОНКОВ",   c: GREEN },
               { v: "6 / 8",                    l: "ОПЕРАТОРОВ", c: BLUE  },
               { v: "98.7%",                    l: "SLA",        c: GOLD  },
             ].map((s) => (
-              <div key={s.l} className="text-right landscape:hidden">
+              <div key={s.l} className="text-right">
                 <div className="font-mono font-bold text-sm" style={{ color: s.c, textShadow: `0 0 8px ${s.c}88` }}>{s.v}</div>
                 <div className="text-[8px] text-white/30 font-mono uppercase">{s.l}</div>
               </div>
             ))}
 
             <motion.div
-              className="text-xs landscape:text-[8px] font-mono px-2.5 landscape:px-1.5 py-1 landscape:py-0 rounded border"
-              style={{ color: GREEN, borderColor: GREEN + "55", background: GREEN + "11" }}
+              className="font-mono rounded border"
+              style={{
+                color: GREEN, borderColor: GREEN + "55", background: GREEN + "11",
+                fontSize: isLandscape ? 8 : 12,
+                padding: isLandscape ? "0 6px" : "4px 10px",
+              }}
               animate={{ opacity: [1, 0.5, 1], boxShadow: [`0 0 6px ${GREEN}44`, `0 0 12px ${GREEN}88`, `0 0 6px ${GREEN}44`] }}
               transition={{ duration: 1.4, repeat: Infinity }}
             >● LIVE</motion.div>
 
-            <div className="font-mono font-bold text-sm landscape:text-[8px]" style={{ color: BLUE, textShadow: `0 0 8px ${BLUE}66` }}>
+            <div className="font-mono font-bold" style={{ color: BLUE, textShadow: `0 0 8px ${BLUE}66`, fontSize: isLandscape ? 8 : 14 }}>
               {time}
             </div>
           </div>
         </header>
 
-        {/* Left side panel — hidden in landscape to reveal background faces */}
-        <div className="absolute left-4 top-16 w-44 space-y-2 z-30 landscape:hidden">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
-            <ScreenPanel title="МЕТРИКИ" color={GREEN}>
-              <div className="space-y-1.5">
-                {[
-                  { l: "ВХОДЯЩИЕ", v: 1247, max: 1500, c: GREEN },
-                  { l: "ИСХОДЯЩИЕ", v: 342,  max: 500,  c: BLUE  },
-                  { l: "ГОЛОС БОТ", v: 891,  max: 1000, c: GOLD  },
-                ].map((m) => (
-                  <div key={m.l} className="space-y-0.5">
-                    <div className="flex justify-between text-[7px] font-mono">
-                      <span style={{ color: m.c + "99" }}>{m.l}</span>
-                      <span style={{ color: m.c }}>{m.v}</span>
-                    </div>
-                    <div className="h-0.5 rounded-full bg-white/5 overflow-hidden">
-                      <motion.div
-                        className="h-full rounded-full"
-                        style={{ background: m.c }}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${(m.v / m.max) * 100}%` }}
-                        transition={{ duration: 1.5, ease: "easeOut" }}
-                      />
-                    </div>
+        {/* Side panels — portrait only */}
+        {!isLandscape && (
+          <>
+            <div className="absolute left-4 top-16 w-44 space-y-2 z-30">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
+                <ScreenPanel title="МЕТРИКИ" color={GREEN}>
+                  <div className="space-y-1.5">
+                    {[
+                      { l: "ВХОДЯЩИЕ", v: 1247, max: 1500, c: GREEN },
+                      { l: "ИСХОДЯЩИЕ", v: 342,  max: 500,  c: BLUE  },
+                      { l: "ГОЛОС БОТ", v: 891,  max: 1000, c: GOLD  },
+                    ].map((m) => (
+                      <div key={m.l} className="space-y-0.5">
+                        <div className="flex justify-between text-[7px] font-mono">
+                          <span style={{ color: m.c + "99" }}>{m.l}</span>
+                          <span style={{ color: m.c }}>{m.v}</span>
+                        </div>
+                        <div className="h-0.5 rounded-full bg-white/5 overflow-hidden">
+                          <motion.div
+                            className="h-full rounded-full"
+                            style={{ background: m.c }}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${(m.v / m.max) * 100}%` }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </ScreenPanel>
-          </motion.div>
+                </ScreenPanel>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}>
+                <ScreenPanel title="ОЧЕРЕДЬ" color={GOLD}>
+                  <CallQueue />
+                </ScreenPanel>
+              </motion.div>
+            </div>
 
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}>
-            <ScreenPanel title="ОЧЕРЕДЬ" color={GOLD}>
-              <CallQueue />
-            </ScreenPanel>
-          </motion.div>
-        </div>
-
-        {/* Right side panel — hidden in landscape to reveal background faces */}
-        <div className="absolute right-4 top-16 w-44 space-y-2 z-30 landscape:hidden">
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
-            <ScreenPanel title="ДАННЫЕ ЭКРАНА" color={BLUE}>
-              <DataStream color={BLUE} speed={1.5} />
-            </ScreenPanel>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}>
-            <ScreenPanel title="СОБЫТИЯ" color={PURPLE}>
-              <div className="space-y-1">
-                {[
-                  { msg: "Алина → заказ принят",  c: GREEN, t: "00:23" },
-                  { msg: "VIP клиент → Карина",   c: GOLD,  t: "01:07" },
-                  { msg: "Бот → оператор",         c: BLUE,  t: "01:44" },
-                  { msg: "RX рецепт → одобрен",   c: GREEN, t: "02:11" },
-                ].map((e, i) => (
-                  <motion.div key={i} className="flex gap-1.5 items-start" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 + i * 0.25 }}>
-                    <div className="w-1 h-1 rounded-full mt-1 shrink-0" style={{ background: e.c }} />
-                    <div className="text-[7px] font-mono text-white/50 flex-1 leading-tight">{e.msg}</div>
-                    <div className="text-[7px] font-mono text-white/20">{e.t}</div>
-                  </motion.div>
-                ))}
-              </div>
-            </ScreenPanel>
-          </motion.div>
-        </div>
+            <div className="absolute right-4 top-16 w-44 space-y-2 z-30">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
+                <ScreenPanel title="ДАННЫЕ ЭКРАНА" color={BLUE}>
+                  <DataStream color={BLUE} speed={1.5} />
+                </ScreenPanel>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}>
+                <ScreenPanel title="СОБЫТИЯ" color={PURPLE}>
+                  <div className="space-y-1">
+                    {[
+                      { msg: "Алина → заказ принят",  c: GREEN, t: "00:23" },
+                      { msg: "VIP клиент → Карина",   c: GOLD,  t: "01:07" },
+                      { msg: "Бот → оператор",         c: BLUE,  t: "01:44" },
+                      { msg: "RX рецепт → одобрен",   c: GREEN, t: "02:11" },
+                    ].map((e, i) => (
+                      <motion.div key={i} className="flex gap-1.5 items-start" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 + i * 0.25 }}>
+                        <div className="w-1 h-1 rounded-full mt-1 shrink-0" style={{ background: e.c }} />
+                        <div className="text-[7px] font-mono text-white/50 flex-1 leading-tight">{e.msg}</div>
+                        <div className="text-[7px] font-mono text-white/20">{e.t}</div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </ScreenPanel>
+              </motion.div>
+            </div>
+          </>
+        )}
 
         <div className="flex-1" />
 
         {/* Bottom section */}
-        <div className="relative z-20 px-5 pb-4 pt-10 landscape:pt-3 landscape:pb-2 bg-gradient-to-t from-[#000510]/95 via-[#000510]/60 to-transparent">
+        <div
+          className="relative z-20 bg-gradient-to-t from-[#000510]/95 via-[#000510]/60 to-transparent"
+          style={{ padding: isLandscape ? "4px 20px 6px" : "40px 20px 16px" }}
+        >
 
-          {/* Neon title */}
-          <div className="text-center mb-4 landscape:mb-1">
-            <motion.div
-              className="text-4xl landscape:text-2xl font-black font-mono tracking-widest"
-              style={{ color: RED, fontFamily: "'Courier New', monospace" }}
-              animate={{ textShadow: [
-                `0 0 8px ${RED}, 0 0 20px ${RED}88, 0 0 50px ${RED}44`,
-                `0 0 12px ${RED}, 0 0 30px ${RED}bb, 0 0 70px ${RED}55`,
-                `0 0 6px ${RED}cc, 0 0 15px ${RED}66, 0 0 40px ${RED}33`,
-                `0 0 12px ${RED}, 0 0 28px ${RED}99, 0 0 60px ${RED}44`,
-                `0 0 8px ${RED}, 0 0 20px ${RED}88, 0 0 50px ${RED}44`,
-              ]}}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            >PHARMACY</motion.div>
-            <motion.div
-              className="text-2xl landscape:text-base font-black font-mono tracking-[0.4em] landscape:tracking-[0.25em]"
-              style={{ color: BLUE, fontFamily: "'Courier New', monospace" }}
-              animate={{ textShadow: [`0 0 8px ${BLUE}, 0 0 20px ${BLUE}88`, `0 0 14px ${BLUE}, 0 0 35px ${BLUE}cc`, `0 0 8px ${BLUE}, 0 0 20px ${BLUE}88`] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            >24 / 7</motion.div>
-          </div>
+          {/* Neon title — portrait only (too tall for landscape) */}
+          {!isLandscape && (
+            <div className="text-center mb-4">
+              <motion.div
+                className="text-4xl font-black font-mono tracking-widest"
+                style={{ color: RED, fontFamily: "'Courier New', monospace" }}
+                animate={{ textShadow: [
+                  `0 0 8px ${RED}, 0 0 20px ${RED}88, 0 0 50px ${RED}44`,
+                  `0 0 12px ${RED}, 0 0 30px ${RED}bb, 0 0 70px ${RED}55`,
+                  `0 0 6px ${RED}cc, 0 0 15px ${RED}66, 0 0 40px ${RED}33`,
+                  `0 0 12px ${RED}, 0 0 28px ${RED}99, 0 0 60px ${RED}44`,
+                  `0 0 8px ${RED}, 0 0 20px ${RED}88, 0 0 50px ${RED}44`,
+                ]}}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >PHARMACY</motion.div>
+              <motion.div
+                className="text-2xl font-black font-mono tracking-[0.4em]"
+                style={{ color: BLUE, fontFamily: "'Courier New', monospace" }}
+                animate={{ textShadow: [`0 0 8px ${BLUE}, 0 0 20px ${BLUE}88`, `0 0 14px ${BLUE}, 0 0 35px ${BLUE}cc`, `0 0 8px ${BLUE}, 0 0 20px ${BLUE}88`] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              >24 / 7</motion.div>
+            </div>
+          )}
 
           {/* Operator cards */}
-          <div className="flex gap-2 mb-3 landscape:mb-1.5 justify-center">
+          <div className="flex gap-2 justify-center" style={{ marginBottom: isLandscape ? 4 : 12 }}>
             {OPERATORS.map((op, i) => (
               <motion.div
                 key={op.name}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 * i, type: "spring", stiffness: 200, damping: 22 }}
-                className="flex-1 max-w-[120px] rounded-xl border bg-black/75 backdrop-blur p-2.5 landscape:p-1.5 relative overflow-hidden"
-                style={{ borderColor: op.color + "44", boxShadow: `0 0 16px ${op.color}18` }}
+                className="flex-1 max-w-[120px] rounded-xl border bg-black/75 backdrop-blur relative overflow-hidden"
+                style={{ padding: isLandscape ? 6 : 10, borderColor: op.color + "44", boxShadow: `0 0 16px ${op.color}18` }}
               >
                 {op.active && (
                   <motion.div
@@ -454,7 +488,7 @@ export default function NeonCallCenterScene() {
           </div>
 
           {/* Stats row */}
-          <div className="grid grid-cols-5 gap-2 mb-3 landscape:mb-1.5">
+          <div className="grid grid-cols-5 gap-2" style={{ marginBottom: isLandscape ? 4 : 12 }}>
             {[
               { label: "ЗВОНКОВ",   value: callCount.toLocaleString(), color: GREEN  },
               { label: "НА ЛИНИИ",  value: "4",                        color: BLUE   },
