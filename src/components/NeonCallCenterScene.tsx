@@ -185,16 +185,16 @@ function ScreenPanel({ title, color, children, className = "" }: { title: string
 
 function CallQueue() {
   const calls = [
-    { id: "Q-001", num: "+7 495 ***-12-34", wait: "00:09", pri: "VIP"  },
-    { id: "Q-002", num: "+7 812 ***-56-78", wait: "00:27", pri: "NORM" },
-    { id: "Q-003", num: "+7 343 ***-90-12", wait: "00:44", pri: "NORM" },
+    { id: "Q-001", num: "+44 20 ***-84-61", wait: "00:09", pri: "VIP"  },
+    { id: "Q-002", num: "+380 44 ***-23-17", wait: "00:27", pri: "NORM" },
+    { id: "Q-003", num: "+44 78 ***-55-90", wait: "00:44", pri: "NORM" },
   ];
   return (
-    <div className="space-y-1">
+    <div className="space-y-0.5">
       {calls.map((c, i) => (
         <motion.div
           key={c.id}
-          className="flex items-center justify-between text-[8px] font-mono px-1.5 py-1 rounded border border-white/5"
+          className="flex items-center justify-between text-[7px] font-mono px-1 py-0.5 rounded border border-white/5"
           animate={{ opacity: [0.7, 1, 0.7] }}
           transition={{ duration: 2, repeat: Infinity, delay: i * 0.7 }}
         >
