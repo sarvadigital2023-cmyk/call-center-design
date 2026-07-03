@@ -232,7 +232,7 @@ export default function NeonCallCenterScene() {
         <img
           src="/callcenter-scene-c6.png"
           alt="Pharmacy Call Center"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-[50%_20%] landscape:object-[50%_10%]"
           style={{ opacity: 0.92 }}
         />
       </motion.div>
@@ -324,7 +324,7 @@ export default function NeonCallCenterScene() {
         </header>
 
         {/* Left side panel */}
-        <div className="absolute left-4 top-16 w-44 space-y-2 z-30">
+        <div className="absolute left-4 landscape:left-2 top-16 landscape:top-12 w-44 landscape:w-36 space-y-2 z-30">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
             <ScreenPanel title="МЕТРИКИ" color={GREEN}>
               <div className="space-y-1.5">
@@ -361,7 +361,7 @@ export default function NeonCallCenterScene() {
         </div>
 
         {/* Right side panel */}
-        <div className="absolute right-4 top-16 w-44 space-y-2 z-30">
+        <div className="absolute right-4 landscape:right-2 top-16 landscape:top-12 w-44 landscape:w-36 space-y-2 z-30">
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
             <ScreenPanel title="ДАННЫЕ ЭКРАНА" color={BLUE}>
               <DataStream color={BLUE} speed={1.5} />
@@ -391,12 +391,12 @@ export default function NeonCallCenterScene() {
         <div className="flex-1" />
 
         {/* Bottom section */}
-        <div className="relative z-20 px-5 pb-4 pt-10 bg-gradient-to-t from-[#000510]/95 via-[#000510]/60 to-transparent">
+        <div className="relative z-20 px-5 pb-4 pt-10 landscape:pt-3 landscape:pb-2 bg-gradient-to-t from-[#000510]/95 via-[#000510]/60 to-transparent">
 
           {/* Neon title */}
-          <div className="text-center mb-4">
+          <div className="text-center mb-4 landscape:mb-1">
             <motion.div
-              className="text-4xl font-black font-mono tracking-widest"
+              className="text-4xl landscape:text-2xl font-black font-mono tracking-widest"
               style={{ color: RED, fontFamily: "'Courier New', monospace" }}
               animate={{ textShadow: [
                 `0 0 8px ${RED}, 0 0 20px ${RED}88, 0 0 50px ${RED}44`,
@@ -408,7 +408,7 @@ export default function NeonCallCenterScene() {
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >PHARMACY</motion.div>
             <motion.div
-              className="text-2xl font-black font-mono tracking-[0.4em]"
+              className="text-2xl landscape:text-base font-black font-mono tracking-[0.4em] landscape:tracking-[0.25em]"
               style={{ color: BLUE, fontFamily: "'Courier New', monospace" }}
               animate={{ textShadow: [`0 0 8px ${BLUE}, 0 0 20px ${BLUE}88`, `0 0 14px ${BLUE}, 0 0 35px ${BLUE}cc`, `0 0 8px ${BLUE}, 0 0 20px ${BLUE}88`] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -416,14 +416,14 @@ export default function NeonCallCenterScene() {
           </div>
 
           {/* Operator cards */}
-          <div className="flex gap-2 mb-3 justify-center">
+          <div className="flex gap-2 mb-3 landscape:mb-1.5 justify-center">
             {OPERATORS.map((op, i) => (
               <motion.div
                 key={op.name}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 * i, type: "spring", stiffness: 200, damping: 22 }}
-                className="flex-1 max-w-[120px] rounded-xl border bg-black/75 backdrop-blur p-2.5 relative overflow-hidden"
+                className="flex-1 max-w-[120px] rounded-xl border bg-black/75 backdrop-blur p-2.5 landscape:p-1.5 relative overflow-hidden"
                 style={{ borderColor: op.color + "44", boxShadow: `0 0 16px ${op.color}18` }}
               >
                 {op.active && (
@@ -453,7 +453,7 @@ export default function NeonCallCenterScene() {
           </div>
 
           {/* Stats row */}
-          <div className="grid grid-cols-5 gap-2 mb-3">
+          <div className="grid grid-cols-5 gap-2 mb-3 landscape:mb-1.5">
             {[
               { label: "ЗВОНКОВ",   value: callCount.toLocaleString(), color: GREEN  },
               { label: "НА ЛИНИИ",  value: "4",                        color: BLUE   },
